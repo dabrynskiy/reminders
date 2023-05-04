@@ -1,31 +1,33 @@
 import { Express } from 'express';
 import express from 'express';
-import bodyParser from 'body-parser';
 
 const PORT = process.env.port || 3001;
 
 const app: Express = express();
 
-app.use( bodyParser.urlencoded({extended: false}) );
+const reminders: string[] = []; // Список напоминаний, пока нет БД
 
-app.use( bodyParser.json() );
+app.use( express.urlencoded({extended: false}) );
+
+app.use( express.json() );
 
 app.listen(PORT, () => {
     console.log('Server starting');
 });
 
-app.get('/api/hello', (request, response) => {
+app.get('/api/reminders', (request, response) => {
     console.log('GET request is coming');
     
     response.json(
-        { get: "Hello get request!" }
+        { reminders: reminders }
     );
 });
 
-app.post('/api/hello', (request, response) => {
+app.post('/api/reminders', (request, response) => {
     console.log('POST request is coming');
 
+    reminders.push(request.body.reminder)
     response.json(
-        { post: "Hello post request!", requestBody: request.body }
+        { reminders: reminders }
     )
 });

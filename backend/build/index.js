@@ -4,19 +4,20 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-const body_parser_1 = __importDefault(require("body-parser"));
 const PORT = process.env.port || 3001;
 const app = (0, express_1.default)();
-app.use(body_parser_1.default.urlencoded({ extended: false }));
-app.use(body_parser_1.default.json());
+const reminders = [];
+app.use(express_1.default.urlencoded({ extended: false }));
+app.use(express_1.default.json());
 app.listen(PORT, () => {
     console.log('Server starting');
 });
-app.get('/api/hello', (request, response) => {
+app.get('/api/reminders', (request, response) => {
     console.log('GET request is coming');
-    response.json({ get: "Hello get request!" });
+    response.json({ reminders: reminders });
 });
-app.post('/api/hello', (request, response) => {
+app.post('/api/reminders', (request, response) => {
     console.log('POST request is coming');
-    response.json({ post: "Hello post request!", requestBody: request.body });
+    reminders.push(request.body.reminder);
+    response.json({ reminders: reminders });
 });
