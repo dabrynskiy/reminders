@@ -1,5 +1,6 @@
 import { Express } from 'express';
 import express from 'express';
+import router from './router';
 
 const PORT = process.env.port || 3001;
 
@@ -10,6 +11,8 @@ const reminders: string[] = []; // Список напоминаний, пока
 app.use( express.urlencoded({extended: false}) );
 
 app.use( express.json() );
+
+app.use('/api', router);
 
 app.listen(PORT, () => {
     console.log('Server starting');
