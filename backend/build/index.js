@@ -7,7 +7,7 @@ const express_1 = __importDefault(require("express"));
 const router_1 = __importDefault(require("./router"));
 const PORT = process.env.port || 3001;
 const app = (0, express_1.default)();
-const reminders = []; // Список напоминаний, пока нет БД
+const reminders = []; // якобы список напоминаний, пока нет БД
 app.use(express_1.default.urlencoded({ extended: false }));
 app.use(express_1.default.json());
 app.use('/api', router_1.default);
