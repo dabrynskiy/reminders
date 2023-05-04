@@ -4,14 +4,20 @@
   "description": "",
   "main": "./backend/index.js",
   "scripts": {
-    "start": "node backend/index.js",
-    "dev" : "nodemon"
+    "start": "node backend/build/index.js",
+    "dev": "nodemon"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "body-parser": "^1.20.2",
     "express": "^4.18.2",
-    "nodemon": "^2.0.22"
+    "nodemon": "^2.0.22",
+    "pg": "^8.10.0"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.17",
+    "@types/node": "^18.16.3"
   }
 }

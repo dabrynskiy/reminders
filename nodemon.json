@@ -1,6 +1,6 @@
 {
     "ignore" : ["node_modules"],
-    "watch" : ["backend/index.js"],
+    "watch" : ["backend/build/index.js"],
     "exec" : "npm start",
     "ext" : "js"
 }
