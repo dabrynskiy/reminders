@@ -13,22 +13,26 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const db_settings_1 = __importDefault(require("../db-settings"));
+const checks_1 = require("../checks/checks");
 const SUCCESS = "success";
 const FAILURE = "failure";
+const USER = 1;
 class ReminderController {
     static create(request, response) {
-        const { text, dateTime, completed } = request.body;
-        const createdReminder = db_settings_1.default.query('INSERT INTO reminders (text, datetime, completed, person_id) values ($1, $2, $3, $4) RETURNING *', [text, dateTime, completed, 1]);
-        createdReminder
-            .then((result) => {
-            response.json({ result: SUCCESS, reminder: result.rows[0] });
-        })
-            .catch((reason) => {
-            response.status(500).json({ result: FAILURE, error: reason });
+        return __awaiter(this, void 0, void 0, function* () {
+            const { text, timestamp } = request.body;
+            try {
+                (0, checks_1.checkBeforeCreate)(text, timestamp);
+                const dbResult = yield db_settings_1.default.query('INSERT INTO reminders (text, datetime, completed, person_id) values ($1, $2, $3, $4) RETURNING *', [text, timestamp, false, USER]);
+                response.json({ result: SUCCESS, reminder: dbResult.rows[0] });
+            }
+            catch (error) {
+                response.status(500).json({ result: FAILURE, error: error });
+            }
         });
     }
     ;
-    static getAll(request, response) {
+    static get(request, response) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const reminders = yield db_settings_1.default.query('SELECT * FROM reminders');

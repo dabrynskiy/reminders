@@ -1,36 +1,38 @@
 import pool from "../db-settings";
 import { Request, Response } from "express";
+import { checkBeforeCreate } from "../checks/checks";
 
 const SUCCESS = "success";
 const FAILURE = "failure";
+const USER = 1;
 
 interface IReminder {
     id: number;
     text: string;
-    dateTime: string;
+    timestamp: string;
     person_id: number;
     completed: boolean;
 }
 
 export default class ReminderController {
-    static create(request: Request, response: Response): void {
-        const {text, dateTime, completed} = request.body;
+    static async create(request: Request, response: Response) {
+        const {text, timestamp} = request.body;
 
-        const createdReminder = pool.query(
-            'INSERT INTO reminders (text, datetime, completed, person_id) values ($1, $2, $3, $4) RETURNING *', 
-            [text, dateTime, completed, 1]
-        );
+        try {
+            checkBeforeCreate(text, timestamp);
 
-        createdReminder
-            .then((result) => {
-                response.json( {result: SUCCESS, reminder: <IReminder>result.rows[0]} )
-            })
-            .catch((reason) => {
-                response.status(500).json({result: FAILURE, error: reason});
-            });
+            const dbResult = await pool.query(
+                'INSERT INTO reminders (text, datetime, completed, person_id) values ($1, $2, $3, $4) RETURNING *', 
+                [text, timestamp, false, USER]
+            );
+
+            response.json( {result: SUCCESS, reminder: <IReminder>dbResult.rows[0]} );
+        } catch(error) {
+            response.status(500).json({result: FAILURE, error: error});
+        }
     };
 
-    static async getAll(request: Request, response: Response) {
+    static async get(request: Request, response: Response) {
         try {
             const reminders = await pool.query('SELECT * FROM reminders');
 

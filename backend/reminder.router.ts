@@ -7,7 +7,7 @@ const router = Router();
 router.post('/reminders', ReminderController.create);
 
 // READ
-router.get('/reminders', ReminderController.getAll);
+router.get('/reminders', ReminderController.get);
 router.get('/reminders/:id', ReminderController.getById);
 
 // UPDATE
