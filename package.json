@@ -5,12 +5,14 @@
   "main": "./backend/index.js",
   "scripts": {
     "start": "node backend/build/index.js",
-    "dev": "nodemon"
+    "dev": "nodemon",
+    "test": "jest"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "axios": "^1.4.0",
     "body-parser": "^1.20.2",
     "express": "^4.18.2",
     "nodemon": "^2.0.22",
@@ -19,6 +21,7 @@
   "devDependencies": {
     "@types/express": "^4.17.17",
     "@types/node": "^18.16.3",
-    "@types/pg": "^8.6.6"
+    "@types/pg": "^8.6.6",
+    "jest": "^29.5.0"
   }
 }

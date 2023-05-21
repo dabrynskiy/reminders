@@ -9,7 +9,7 @@ const router = (0, express_1.Router)();
 // CREATE
 router.post('/reminders', reminder_controller_1.default.create);
 // READ
-router.get('/reminders', reminder_controller_1.default.getAll);
+router.get('/reminders', reminder_controller_1.default.get);
 router.get('/reminders/:id', reminder_controller_1.default.getById);
 // UPDATE
 router.put('/reminders/:id', reminder_controller_1.default.updateById);
