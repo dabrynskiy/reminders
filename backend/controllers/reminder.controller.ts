@@ -33,8 +33,27 @@ export default class ReminderController {
     };
 
     static async get(request: Request, response: Response) {
+
         try {
-            const reminders = await pool.query('SELECT * FROM reminders');
+            const limit = Number(request.query.limit);
+            if( Number.isNaN(limit) || limit <= 0 ) {
+                throw 'incorrect query parameter \'limit\'';
+            }
+
+            if(limit > 100) {
+                throw 'limit too large';
+            }
+
+            const page = Number(request.query.page);
+            if( Number.isNaN(page) || page < 1 ) {
+                throw 'incorrect query parameter \'page\'';
+            }
+
+            const offset = limit * (page - 1);
+
+            const reminders = await pool.query(
+                'SELECT * FROM reminders WHERE person_id = $1 LIMIT $2 OFFSET $3', 
+                [USER, limit, offset]);
 
             response.json({result: SUCCESS, reminders: <IReminder[]>reminders.rows});
         } catch (error) {

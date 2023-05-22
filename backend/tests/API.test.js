@@ -1,3 +1,5 @@
+const { describe } = require('node:test');
+
 const CORRECT_DATE = '2054-12-31T21:00:00.000Z';
 const axios = require('axios').default;
 const API_REMINDERS = 'http://localhost:3001/api/reminders/';
@@ -83,5 +85,45 @@ describe('проверки API /api/reminders method POST', () => {
 
             })
             .catch(error => expect(1).toBe(2));
+    });
+});
+
+describe('Проверки API /api/reminders method GET', () => {
+    it('должна возвращать ошибку при вызове без параметров/ c некорректными параметрами', () => {
+        const incorrectLimit = ['', 'test', [], {}, undefined, null, -15, -15n, NaN, true, 101];
+        const incorrectPage = ['', 'test', [], {}, undefined, null, -15, -15n, NaN, true];
+
+        let result = axios.get(API_REMINDERS)
+                .then(response => expect(1).toBe(2))
+                .catch(error => expect(error.message).toMatch(/failed with status code 500/));
+
+        incorrectLimit.forEach(value => {
+            const path = API_REMINDERS + `?limit=${value}}&page=1`;
+            axios.get(path)
+                .then(response => expect(1).toBe(2))
+                .catch(error => expect(error.message).toMatch(/failed with status code 500/));
+        });
+
+        incorrectPage.forEach(value => {
+            axios.get(API_REMINDERS + `?limit=1&page=${value}`)
+                .then(response => expect(1).toBe(2))
+                .catch(error => expect(error.message).toMatch(/failed with status code 500/));
+        });
+
+        return result;
+    });
+
+    it('должна возвращать указанное в параметре limit количество', async () => {
+        const limits = [1, 2];
+
+        limits.forEach(value => {
+            axios.get(API_REMINDERS + `?limit=${value}&page=1`)
+                .then(response => {
+                    expect(response.data.result).toBe("success");
+
+                    expect(response.data.reminders.length).toBe(value);
+                })
+                .catch(error => expect(1).toBe(2));
+        });
     });
 });
