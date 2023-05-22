@@ -21,6 +21,12 @@ function checkTimestamp(timestamp: string) {
 function checkTimestampNotInPast(timestamp: string) {
     if( Date.now() > Date.parse(timestamp) ) {
         throw Message.date_in_the_past(timestamp);
+    };
+};
+
+function checkBoolean(value: any) {
+    if(typeof value !== 'boolean') {
+        throw 'incorrect type for completed'
     }
 }
 
@@ -28,4 +34,18 @@ export function checkBeforeCreate(text: any, timestamp: string) {
     checkText(text);
     checkTimestamp(timestamp);
     checkTimestampNotInPast(timestamp)
+};
+
+export function checkID(id_param: string) {
+    const id = Number(id_param);
+    if( Number.isNaN(id) || id < 1 ) {
+        throw 'incorrect reminder id';
+    };
+};
+
+export function checkBeforeUpdate(text: any, timestamp: string, completed: any, id: string, ) {
+    checkText(text);
+    checkTimestamp(timestamp);
+    checkID(id);
+    checkBoolean(completed);
 };

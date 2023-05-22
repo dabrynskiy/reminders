@@ -59,7 +59,11 @@ class ReminderController {
     static getById(request, response) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const reminder = yield db_settings_1.default.query('SELECT * FROM reminders WHERE id = $1', [request.params.id]);
+                (0, checks_1.checkID)(request.params.id);
+                const reminder = yield db_settings_1.default.query('SELECT * FROM reminders WHERE id = $1 AND person_id = $2', [request.params.id, USER]);
+                if (reminder.rows.length === 0) {
+                    throw `Not found with id ${request.params.id}`;
+                }
                 response.json({ result: SUCCESS, reminder: reminder.rows[0] });
             }
             catch (error) {
@@ -69,9 +73,16 @@ class ReminderController {
     }
     ;
     static updateById(request, response) {
-        const { text, dateTime, completed } = request.body;
+        const { text, timestamp, completed } = request.body;
         const id = request.params.id;
-        const updatedReminder = db_settings_1.default.query('UPDATE reminders SET text = $1, datetime = $2, completed = $3 WHERE id = $4 RETURNING *', [text, dateTime, completed, id]);
+        try {
+            (0, checks_1.checkBeforeUpdate)(text, timestamp, completed, id);
+        }
+        catch (error) {
+            response.status(500).json({ result: FAILURE, error: error });
+            return;
+        }
+        const updatedReminder = db_settings_1.default.query('UPDATE reminders SET text = $1, datetime = $2, completed = $3 WHERE id = $4 AND person_id = $5 RETURNING *', [text, timestamp, completed, id, USER]);
         updatedReminder
             .then((result) => {
             response.json({ result: SUCCESS, reminder: result.rows[0] });

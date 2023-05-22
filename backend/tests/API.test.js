@@ -3,6 +3,7 @@ const { describe } = require('node:test');
 const CORRECT_DATE = '2054-12-31T21:00:00.000Z';
 const axios = require('axios').default;
 const API_REMINDERS = 'http://localhost:3001/api/reminders/';
+let id;
 
 describe('Тест API общие проверки', () => {
 
@@ -64,8 +65,7 @@ describe('проверки API /api/reminders method POST', () => {
 
         return result;
     });
-    // TODO запомнить id созданного напоминания чтобы использовать его в дальнейших тестах
-    // в том числе удалить данные созданные в результате теста
+
     it('должно создавать корректное напоминание', () => {
         const body = {text: "test", timestamp: CORRECT_DATE}
 
@@ -83,6 +83,7 @@ describe('проверки API /api/reminders method POST', () => {
 
                 expect(response.data.reminder.completed).toBe(false);
 
+                id = response.data.reminder.id;
             })
             .catch(error => expect(1).toBe(2));
     });
@@ -125,5 +126,61 @@ describe('Проверки API /api/reminders method GET', () => {
                 })
                 .catch(error => expect(1).toBe(2));
         });
+    });
+});
+
+describe('Проверки API /api/reminders/:id method GET', () => {
+    it('должна возвращать ошибку при некорректном параметре', () => {
+        const params = ['test', 0, true, false, NaN, undefined, [], {}, null];
+
+        params.forEach(value => {
+            axios.get(`${API_REMINDERS}${value}`)
+                .then(response => expect(1).toBe(2))
+                .catch(error => expect(error.message).toMatch(/failed with status code 500/));
+        });
+    });
+
+    it('должна возвращать данные при корректном параметре', () => {
+        axios.get(`${API_REMINDERS}${id}`)
+            .then(response => {
+                expect(response.data.result).toBe('success');
+                expect(response.data.reminder.id).toBe(id);
+                expect(response.data.reminder.text).toBe('test');
+                expect(response.data.reminder.datetime).toBe(CORRECT_DATE);
+                expect(response.data.reminder.person_id).not.toBe(undefined);
+                expect(response.data.reminder.completed).toBe(false);
+            })
+            .catch(error => expect(1).toBe(2));
+    });
+
+    it('должна возвращать ошибку при несуществующем параметре', () => {
+        axios.get(`${API_REMINDERS}${100000}`)
+            .then(response => expect(1).toBe(2))
+            .catch(error => expect(error.message).toMatch(/failed with status code 500/))
+    });
+});
+
+describe('Проверки API /api/reminders/:id method PUT', () => {
+    // TODO проверки неполные, дописать
+    it('должна успешно обновлять', () => {
+        const reminder = {
+            text: 'updated text',
+            timestamp: CORRECT_DATE,
+            completed: false
+        };
+
+        axios.put(`${API_REMINDERS}${id}`, reminder)
+            .then(response => expect(response.data.reminder.text).toBe(reminder.text))
+            .catch(error => expect(1).toBe(2));
+    });
+});
+
+describe('Проверки API /api/reminders/:id method DELETE', () => {
+    // TODO проверки неполные, дописать
+    it('должна успешно удалять', () => {
+
+        axios.delete(`${API_REMINDERS}${id}`)
+            .then(response => expect(response.data.result).toBe("success"))
+            .catch(error => expect(1).toBe(2));
     });
 });

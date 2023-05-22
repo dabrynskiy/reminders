@@ -1,6 +1,6 @@
 import pool from "../db-settings";
 import { Request, Response } from "express";
-import { checkBeforeCreate } from "../checks/checks";
+import { checkBeforeCreate, checkBeforeUpdate, checkID } from "../checks/checks";
 
 const SUCCESS = "success";
 const FAILURE = "failure";
@@ -63,10 +63,17 @@ export default class ReminderController {
 
     static async getById(request: Request, response: Response) {
         try {
+            checkID(request.params.id)
+
             const reminder = await pool.query(
-                'SELECT * FROM reminders WHERE id = $1',
-                [request.params.id]
+                'SELECT * FROM reminders WHERE id = $1 AND person_id = $2',
+                [request.params.id, USER]
             );
+            
+            if(reminder.rows.length === 0) {
+                throw `Not found with id ${request.params.id}`;
+            }
+
             response.json({result: SUCCESS, reminder: reminder.rows[0]});
         } catch (error) {
             response.status(500).json({result: FAILURE, error: error});
@@ -74,12 +81,19 @@ export default class ReminderController {
     };
 
     static updateById(request: Request, response: Response): void {
-        const {text, dateTime, completed} = request.body;
+        const {text, timestamp, completed} = request.body;
         const id = request.params.id;
+        try {
+            checkBeforeUpdate(text, timestamp, completed, id);
+
+        } catch (error) {
+            response.status(500).json({result: FAILURE, error: error});
+            return;
+        }
 
         const updatedReminder = pool.query(
-            'UPDATE reminders SET text = $1, datetime = $2, completed = $3 WHERE id = $4 RETURNING *',
-            [text, dateTime, completed, id]
+            'UPDATE reminders SET text = $1, datetime = $2, completed = $3 WHERE id = $4 AND person_id = $5 RETURNING *',
+            [text, timestamp, completed, id, USER]
         );
 
         updatedReminder
