@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.checkBeforeCreate = void 0;
+exports.checkBeforeUpdate = exports.checkID = exports.checkBeforeCreate = void 0;
 const message_1 = require("../messages/message");
 function checkText(text) {
     if (typeof text !== 'string') {
@@ -25,6 +25,13 @@ function checkTimestampNotInPast(timestamp) {
     if (Date.now() > Date.parse(timestamp)) {
         throw message_1.Message.date_in_the_past(timestamp);
     }
+    ;
+}
+;
+function checkBoolean(value) {
+    if (typeof value !== 'boolean') {
+        throw 'incorrect type for completed';
+    }
 }
 function checkBeforeCreate(text, timestamp) {
     checkText(text);
@@ -32,4 +39,21 @@ function checkBeforeCreate(text, timestamp) {
     checkTimestampNotInPast(timestamp);
 }
 exports.checkBeforeCreate = checkBeforeCreate;
+;
+function checkID(id_param) {
+    const id = Number(id_param);
+    if (Number.isNaN(id) || id < 1) {
+        throw 'incorrect reminder id';
+    }
+    ;
+}
+exports.checkID = checkID;
+;
+function checkBeforeUpdate(text, timestamp, completed, id) {
+    checkText(text);
+    checkTimestamp(timestamp);
+    checkID(id);
+    checkBoolean(completed);
+}
+exports.checkBeforeUpdate = checkBeforeUpdate;
 ;
