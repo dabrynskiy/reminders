@@ -1,0 +1,22 @@
+.searchInput {
+    width: 50rem;
+    border: 2px solid #005bff;
+    border: 2px solid #b3bcc5;
+    border-radius: 8px;
+    font-weight: 400;
+    font-size: large;
+    letter-spacing: 0.2px;
+    line-height: 20px;
+    font-style: normal;
+    color: #001a34;
+}
+
+.searchInput:hover {
+    border: 2px solid #005bff;
+}
+
+@media (max-width: 1250px) {
+    .searchInput {
+        width: 30rem
+    }
+}
