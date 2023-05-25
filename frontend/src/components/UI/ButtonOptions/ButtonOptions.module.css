@@ -1,0 +1,8 @@
+.buttonOptions {
+    border: none;
+    background-color: blueviolet;
+}
+
+.buttonOptions:hover > svg {
+    fill: #001a34;
+}

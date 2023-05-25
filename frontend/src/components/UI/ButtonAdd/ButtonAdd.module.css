@@ -1,0 +1,15 @@
+.buttonAdd {
+    border: none;
+    background-color: whitesmoke;
+    opacity: 0.8;
+}
+
+.buttonAdd:hover {
+    opacity: 1;
+    transition: all;
+    transition-timing-function: ease;
+}
+
+.buttonAdd:hover > svg > g > path {
+    fill: #005bff;
+}
