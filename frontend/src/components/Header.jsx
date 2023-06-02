@@ -9,7 +9,7 @@ export const Header = (props) => {
                 Reminders
             </h1>
             <InputSearch />
-            <ButtonAdd eventAdd={props.createReminder}/>
+            <ButtonAdd />
         </header>
     )
 }

@@ -47,8 +47,13 @@ class ReminderController {
                     throw 'incorrect query parameter \'page\'';
                 }
                 const offset = limit * (page - 1);
-                const reminders = yield db_settings_1.default.query('SELECT * FROM reminders WHERE person_id = $1 LIMIT $2 OFFSET $3', [USER, limit, offset]);
-                response.json({ result: SUCCESS, reminders: reminders.rows });
+                const reminders = yield db_settings_1.default.query('SELECT * FROM reminders WHERE person_id = $1 ORDER BY id ASC LIMIT $2 OFFSET $3', [USER, limit, offset]);
+                const hasNext = yield db_settings_1.default.query('SELECT COUNT(id) FROM reminders WHERE id > $1 AND person_id = $2', [reminders.rows[reminders.rows.length - 1].id, USER]);
+                response.json({
+                    result: SUCCESS,
+                    reminders: reminders.rows,
+                    hasNext: Boolean(+hasNext.rows[0].count)
+                });
             }
             catch (error) {
                 response.status(500).json({ result: FAILURE, error: error });

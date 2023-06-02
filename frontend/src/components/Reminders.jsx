@@ -1,18 +1,22 @@
-import React from "react";
+import React, { forwardRef, useEffect, useRef } from "react";
 import { ReminderItem } from "./RemindersItem";
 
-export const Reminders = (props) => {
+export const Reminders = forwardRef((props, ref) => {
+
     return (
-        <ul
-            className="reminders"
-        >
-            {
-                props.reminders.map(reminder => {
-                    return (
-                        <ReminderItem reminder={reminder} />
+        <main>
+            <ul className="reminders" >
+                {
+                    props.reminders.map(reminder =>
+                        <ReminderItem reminder key={reminder.id} />
                     )
-                })
-            }
-        </ul>
+                }
+            </ul>
+            <div
+                style={{height: '10px'}}
+                ref={ref}
+            >
+            </div>
+        </main>
     )
-}
+})

@@ -39,7 +39,7 @@ nav {
 
 main {
   padding: 5px;
-  overflow: hidden;
+  overflow: scroll;
   background-color: rgba(192,192,192, 0.2);
   width: 80%;
   border-radius: 8px;

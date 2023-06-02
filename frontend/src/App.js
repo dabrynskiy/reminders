@@ -1,32 +1,62 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import './App.css';
 import { Header } from './components/Header';
-import { FiltersList } from './components/FiltersList';
+import { Navigation } from './components/Navigation';
 import { Reminders } from './components/Reminders';
 
 function App() {
-
+  const ref = useRef();
   const [reminders, setReminders] = useState([]);
 
-  const createReminder = () => {
-    const counter = reminders.length ? reminders[reminders.length - 1] + 60 : 10;
-    setReminders([...reminders, counter])
-  }
+  const [hasNext, setHasNext] = useState(true);
+
+  const limit = 5;
+  
+  const [page, setPage] = useState(1);
+  
+  useEffect(() => {
+    const observer = new IntersectionObserver(async (entries, observer) => {
+      if(entries[0].isIntersecting && hasNext) {
+
+        try {
+          const response = await fetch(`/api/reminders/?limit=${limit}&page=${page}`);
+          const JSONresponse = await response.json();
+
+          if(JSONresponse.result === 'failure') {
+            throw new Error(`Ошибка при загрузке данных: ${JSONresponse.error}` )
+          }
+
+          setReminders([
+            ...reminders,
+            ...JSONresponse.reminders
+          ])
+
+          if(JSONresponse.hasNext) {
+            setPage(page + 1);
+          }
+
+          setHasNext(JSONresponse.hasNext)
+
+          observer.disconnect()
+        } catch (error) {
+          console.log(error.message) // TODO вывести ошибку!!!
+        }
+
+      };
+      
+    });
+
+      observer.observe(ref.current);
+  }, [page])
 
   return (
     <>
     <div className="external-wrapper">
-      <div class="internal-wrapper">
-        <Header createReminder={createReminder}/>
-        <div
-          className='nav-and-main'
-        >
-          <nav>
-            <FiltersList />
-          </nav>
-          <main>
-            <Reminders reminders={reminders} />
-          </main>
+      <div className="internal-wrapper">
+        <Header />
+        <div className='nav-and-main'>
+          <Navigation />
+          <Reminders reminders={reminders} ref={ref}  />
         </div>
       </div>
     </div>
@@ -36,6 +66,6 @@ function App() {
     </div>
     </>
   );
-}
+};
 
 export default App;
