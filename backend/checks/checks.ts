@@ -1,3 +1,4 @@
+import { title } from "process";
 import { Message } from "../messages/message";
 
 function checkText(text: any) {
@@ -30,8 +31,9 @@ function checkBoolean(value: any) {
     }
 }
 
-export function checkBeforeCreate(text: any, timestamp: string) {
+export function checkBeforeCreate(text: any, timestamp: string, title: string) {
     checkText(text);
+    checkText(title)
     checkTimestamp(timestamp);
     checkTimestampNotInPast(timestamp)
 };
@@ -45,6 +47,7 @@ export function checkID(id_param: string) {
 
 export function checkBeforeUpdate(text: any, timestamp: string, completed: any, id: string, ) {
     checkText(text);
+    checkText(title)
     checkTimestamp(timestamp);
     checkID(id);
     checkBoolean(completed);

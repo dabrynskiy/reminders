@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.checkBeforeUpdate = exports.checkID = exports.checkBeforeCreate = void 0;
+const process_1 = require("process");
 const message_1 = require("../messages/message");
 function checkText(text) {
     if (typeof text !== 'string') {
@@ -33,8 +34,9 @@ function checkBoolean(value) {
         throw 'incorrect type for completed';
     }
 }
-function checkBeforeCreate(text, timestamp) {
+function checkBeforeCreate(text, timestamp, title) {
     checkText(text);
+    checkText(title);
     checkTimestamp(timestamp);
     checkTimestampNotInPast(timestamp);
 }
@@ -51,6 +53,7 @@ exports.checkID = checkID;
 ;
 function checkBeforeUpdate(text, timestamp, completed, id) {
     checkText(text);
+    checkText(process_1.title);
     checkTimestamp(timestamp);
     checkID(id);
     checkBoolean(completed);

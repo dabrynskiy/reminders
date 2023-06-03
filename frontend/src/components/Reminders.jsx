@@ -8,7 +8,7 @@ export const Reminders = forwardRef((props, ref) => {
             <ul className="reminders" >
                 {
                     props.reminders.map(reminder =>
-                        <ReminderItem reminder key={reminder.id} />
+                        <ReminderItem reminder={reminder} key={reminder.id} />
                     )
                 }
             </ul>
