@@ -13,34 +13,43 @@ function App() {
   const limit = 5;
   
   const [page, setPage] = useState(1);
+
+  const [isLoading, setIsLoading] = useState(false);
   
   useEffect(() => {
     const observer = new IntersectionObserver(async (entries, observer) => {
       if(entries[0].isIntersecting && hasNext) {
 
-        try {
-          const response = await fetch(`/api/reminders/?limit=${limit}&page=${page}`);
-          const JSONresponse = await response.json();
+        setIsLoading(true);
 
-          if(JSONresponse.result === 'failure') {
-            throw new Error(`Ошибка при загрузке данных: ${JSONresponse.error}` )
-          }
+        setTimeout(async () => {
+          try {
+            const response = await fetch(`/api/reminders/?limit=${limit}&page=${page}`);
+            const JSONresponse = await response.json();
 
-          setReminders([
-            ...reminders,
-            ...JSONresponse.reminders
-          ])
+            if(JSONresponse.result === 'failure') {
+              throw new Error(`Ошибка при загрузке данных: ${JSONresponse.error}` );
+            };
 
-          if(JSONresponse.hasNext) {
-            setPage(page + 1);
-          }
+            setReminders([
+              ...reminders,
+              ...JSONresponse.reminders
+            ]);
 
-          setHasNext(JSONresponse.hasNext)
+            if(JSONresponse.hasNext) {
+              setPage(page + 1);
+            };
 
-          observer.disconnect()
-        } catch (error) {
-          console.log(error.message) // TODO вывести ошибку!!!
-        }
+            setHasNext(JSONresponse.hasNext);
+
+            observer.disconnect();
+
+          } catch (error) {
+            console.log(error.message); // TODO вывести ошибку!!!
+          };
+
+          setIsLoading(false);
+        }, 2000)
 
       };
       
@@ -56,7 +65,7 @@ function App() {
         <Header />
         <div className='nav-and-main'>
           <Navigation />
-          <Reminders reminders={reminders} ref={ref}  />
+          <Reminders reminders={reminders} ref={ref}  isLoading={isLoading} />
         </div>
       </div>
     </div>

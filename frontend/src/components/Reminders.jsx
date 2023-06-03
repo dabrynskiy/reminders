@@ -11,6 +11,9 @@ export const Reminders = forwardRef((props, ref) => {
                         <ReminderItem reminder={reminder} key={reminder.id} />
                     )
                 }
+                {
+                    props.isLoading && <div>ИДЕТ ЗАГРУЗКА ДАННЫХ</div>
+                }
             </ul>
             <div
                 style={{height: '10px'}}
