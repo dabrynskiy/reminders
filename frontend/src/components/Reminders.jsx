@@ -6,6 +6,9 @@ export const Reminders = forwardRef((props, ref) => {
 
     return (
         <main>
+            {
+                props.loadingError && <div>{props.loadingError.error}</div>
+            }
             <ul className="reminders" >
                 {
                     props.reminders.map(reminder =>
