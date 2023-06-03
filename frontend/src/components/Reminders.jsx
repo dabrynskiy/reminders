@@ -1,5 +1,6 @@
 import React, { forwardRef, useEffect, useRef } from "react";
 import { ReminderItem } from "./RemindersItem";
+import { Loader } from "./UI/Loader/Loader";
 
 export const Reminders = forwardRef((props, ref) => {
 
@@ -12,7 +13,10 @@ export const Reminders = forwardRef((props, ref) => {
                     )
                 }
                 {
-                    props.isLoading && <div>ИДЕТ ЗАГРУЗКА ДАННЫХ</div>
+                    props.isLoading &&
+                    <li>
+                        <Loader />
+                    </li>
                 }
             </ul>
             <div
