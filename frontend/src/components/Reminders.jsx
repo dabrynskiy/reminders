@@ -1,14 +1,12 @@
 import React, { forwardRef, useEffect, useRef } from "react";
 import { ReminderItem } from "./RemindersItem";
 import { Loader } from "./UI/Loader/Loader";
+import { Message } from "./UI/Message/Message";
 
 export const Reminders = forwardRef((props, ref) => {
 
     return (
         <main>
-            {
-                props.loadingError && <div>{props.loadingError.error}</div>
-            }
             <ul className="reminders" >
                 {
                     props.reminders.map(reminder =>
@@ -20,6 +18,9 @@ export const Reminders = forwardRef((props, ref) => {
                     <li>
                         <Loader />
                     </li>
+                }
+                {
+                    !props.isLoading && props.loadingError.hasError && <Message>{props.loadingError.error}</Message>
                 }
             </ul>
             <div

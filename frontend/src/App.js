@@ -10,7 +10,7 @@ function App() {
 
   const [hasNext, setHasNext] = useState(true);
 
-  const limit = 5;
+  let limit = 5; //!!!!!!!!!!!!!!!
   
   const [page, setPage] = useState(1);
 
@@ -26,7 +26,8 @@ function App() {
 
         setTimeout(async () => { // for view loader :-)
           try {
-            const response = await fetch(`/api/reminders/?l11imit=${limit}&page=${page}`);
+            if(page === 2) {limit = 1000} // for error
+            const response = await fetch(`/api/reminders/?limit=${limit}&page=${page}`);
             const JSONresponse = await response.json();
 
             if(JSONresponse.result === 'failure') {
@@ -49,11 +50,12 @@ function App() {
           } catch (error) {
             setIsLoading(false);
 
-            console.log(error.message); // TODO вывести ошибку!!!
-            setLoadingError({
-              hasError: true,
-              error: error.message
-            })
+            setTimeout(() => {
+              setLoadingError({
+                hasError: true,
+                error: error.message
+              });
+            });
           };
 
           setIsLoading(false);
