@@ -3,6 +3,7 @@ import './App.css';
 import { Header } from './components/Header';
 import { Navigation } from './components/Navigation';
 import { Reminders } from './components/Reminders';
+import { Popup } from './components/UI/Popup/Popup';
 
 function App() {
   const ref = useRef();
@@ -10,13 +11,15 @@ function App() {
 
   const [hasNext, setHasNext] = useState(true);
 
-  let limit = 5; //!!!!!!!!!!!!!!!
+  const limit = 5; //!!!!!!!!!!!!!!!
   
   const [page, setPage] = useState(1);
 
   const [isLoading, setIsLoading] = useState(false);
 
   const [loadingError, setLoadingError] = useState({hasError: false, error: ''});
+
+  const [popup, setPopup] = useState(false);
   
   useEffect(() => {
     const observer = new IntersectionObserver(async (entries, observer) => {
@@ -26,7 +29,7 @@ function App() {
 
         setTimeout(async () => { // for view loader :-)
           try {
-            if(page === 2) {limit = 1000} // for error
+            //if(page === 2) {limit = 1000} // for error
             const response = await fetch(`/api/reminders/?limit=${limit}&page=${page}`);
             const JSONresponse = await response.json();
 
@@ -73,7 +76,7 @@ function App() {
     <>
     <div className="external-wrapper">
       <div className="internal-wrapper">
-        <Header />
+        <Header setPopup={setPopup} />
         <div className='nav-and-main'>
           <Navigation />
           <Reminders
@@ -85,10 +88,7 @@ function App() {
         </div>
       </div>
     </div>
-    <div className='popup-wrapper'>
-      <div className='popup'>
-      </div>
-    </div>
+    <Popup openPopup={popup} setPopup={setPopup} />
     </>
   );
 };
