@@ -1,0 +1,20 @@
+.message_hidden {
+    background-color: #dc143c;
+    opacity: 0.8;
+    margin: auto;
+    text-align: center;
+    min-height: 3rem;
+    width: 30rem;
+    border-radius: 8px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, .3),
+              -23px 0 20px -23px rgba(0, 0, 0, .6),
+              23px 0 20px -23px rgba(0, 0, 0, .6),
+              inset 0 0 40px rgba(0, 0, 0, .1);
+    vertical-align: auto;
+    transform: translateX(-800px);
+    transition: transform 1s ease;
+}
+
+.message {
+    transform: translateY(0px);
+}

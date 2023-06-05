@@ -67,7 +67,7 @@ describe('проверки API /api/reminders method POST', () => {
     });
 
     it('должно создавать корректное напоминание', () => {
-        const body = {text: "test", timestamp: CORRECT_DATE}
+        const body = {text: "test", timestamp: CORRECT_DATE, title: 'title test'}
 
         return axios.post(API_REMINDERS, body)
             .then(response => {
@@ -77,11 +77,13 @@ describe('проверки API /api/reminders method POST', () => {
 
                 expect(response.data.reminder.text).toBe('test');
 
-                expect(response.data.reminder.datetime).toBe(CORRECT_DATE);
+                expect(response.data.reminder.timestamp).toBe(CORRECT_DATE);
 
                 expect(response.data.reminder.person_id).toBe(1);
 
                 expect(response.data.reminder.completed).toBe(false);
+
+                expect(response.data.reminder.title).toBe('title test');
 
                 id = response.data.reminder.id;
             })
@@ -146,7 +148,7 @@ describe('Проверки API /api/reminders/:id method GET', () => {
                 expect(response.data.result).toBe('success');
                 expect(response.data.reminder.id).toBe(id);
                 expect(response.data.reminder.text).toBe('test');
-                expect(response.data.reminder.datetime).toBe(CORRECT_DATE);
+                expect(response.data.reminder.timestamp).toBe(CORRECT_DATE);
                 expect(response.data.reminder.person_id).not.toBe(undefined);
                 expect(response.data.reminder.completed).toBe(false);
             })

@@ -16,14 +16,14 @@ interface IReminder {
 
 export default class ReminderController {
     static async create(request: Request, response: Response) {
-        const {text, timestamp} = request.body;
+        const {title, text, timestamp} = request.body;
 
         try {
-            checkBeforeCreate(text, timestamp);
+            checkBeforeCreate(text, timestamp, title);
 
             const dbResult = await pool.query(
-                'INSERT INTO reminders (text, datetime, completed, person_id) values ($1, $2, $3, $4) RETURNING *', 
-                [text, timestamp, false, USER]
+                'INSERT INTO reminders (text, timestamp, completed, person_id, title) values ($1, $2, $3, $4, $5) RETURNING *', 
+                [text, timestamp, false, USER, title]
             );
 
             response.json( {result: SUCCESS, reminder: <IReminder>dbResult.rows[0]} );
@@ -91,7 +91,7 @@ export default class ReminderController {
     };
 
     static updateById(request: Request, response: Response): void {
-        const {text, timestamp, completed} = request.body;
+        const {title, text, timestamp, completed} = request.body;
         const id = request.params.id;
         try {
             checkBeforeUpdate(text, timestamp, completed, id);
@@ -102,8 +102,8 @@ export default class ReminderController {
         }
 
         const updatedReminder = pool.query(
-            'UPDATE reminders SET text = $1, datetime = $2, completed = $3 WHERE id = $4 AND person_id = $5 RETURNING *',
-            [text, timestamp, completed, id, USER]
+            'UPDATE reminders SET text = $1, timestamp = $2, completed = $3, title = $6 WHERE id = $4 AND person_id = $5 RETURNING *',
+            [text, timestamp, completed, id, USER, title]
         );
 
         updatedReminder

@@ -29,3 +29,9 @@ ADD COLUMN completed boolean;
 
 ALTER TABLE reminders
 ALTER COLUMN datetime TYPE timestamptz
+
+ALTER TABLE reminders
+RENAME COLUMN datetime TO timestamp;
+
+ALTER TABLE reminders
+ADD COLUMN title CHAR(10);

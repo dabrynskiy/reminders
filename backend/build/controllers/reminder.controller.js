@@ -20,10 +20,10 @@ const USER = 1;
 class ReminderController {
     static create(request, response) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { text, timestamp } = request.body;
+            const { title, text, timestamp } = request.body;
             try {
-                (0, checks_1.checkBeforeCreate)(text, timestamp);
-                const dbResult = yield db_settings_1.default.query('INSERT INTO reminders (text, datetime, completed, person_id) values ($1, $2, $3, $4) RETURNING *', [text, timestamp, false, USER]);
+                (0, checks_1.checkBeforeCreate)(text, timestamp, title);
+                const dbResult = yield db_settings_1.default.query('INSERT INTO reminders (text, timestamp, completed, person_id, title) values ($1, $2, $3, $4, $5) RETURNING *', [text, timestamp, false, USER, title]);
                 response.json({ result: SUCCESS, reminder: dbResult.rows[0] });
             }
             catch (error) {
@@ -78,7 +78,7 @@ class ReminderController {
     }
     ;
     static updateById(request, response) {
-        const { text, timestamp, completed } = request.body;
+        const { title, text, timestamp, completed } = request.body;
         const id = request.params.id;
         try {
             (0, checks_1.checkBeforeUpdate)(text, timestamp, completed, id);
@@ -87,7 +87,7 @@ class ReminderController {
             response.status(500).json({ result: FAILURE, error: error });
             return;
         }
-        const updatedReminder = db_settings_1.default.query('UPDATE reminders SET text = $1, datetime = $2, completed = $3 WHERE id = $4 AND person_id = $5 RETURNING *', [text, timestamp, completed, id, USER]);
+        const updatedReminder = db_settings_1.default.query('UPDATE reminders SET text = $1, timestamp = $2, completed = $3, title = $6 WHERE id = $4 AND person_id = $5 RETURNING *', [text, timestamp, completed, id, USER, title]);
         updatedReminder
             .then((result) => {
             response.json({ result: SUCCESS, reminder: result.rows[0] });

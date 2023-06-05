@@ -1,7 +1,7 @@
 import React from "react";
 import { ButtonOtions } from "./UI/ButtonOptions/ButtonOptions";
 
-export const ReminderItem = (props) => {
+export const ReminderItem = ({reminder}, ...props) => {
     return (
         <li
             className="remindersItem"
@@ -9,23 +9,24 @@ export const ReminderItem = (props) => {
             <div
                 className="reminderItemHeader"
             >
-                <h2>Lorem, ipsum dolor.</h2>
+                <h2>{reminder.title}</h2>
                 <ButtonOtions />
             </div>
             <div
                 className="reminderItemContent"
             >
-                <span>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Excepturi, assumenda!</span>
+                <span>{reminder.text}</span>
             </div>
             <div
                 className="additionalInfo"
             >
-                <span>31.12.2023 23:59:59</span>
+                <span>{new Date(reminder.timestamp).toLocaleString()}</span>
                 <div>
                     <input
                         type="checkbox"
                         name="done"
                         id="done"
+                        checked={reminder.completed}
                     />
                     <label htmlFor="done">Done</label>
                 </div>
