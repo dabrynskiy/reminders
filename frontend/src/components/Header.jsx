@@ -9,7 +9,7 @@ export const Header = (props) => {
                 Reminders
             </h1>
             <InputSearch />
-            <ButtonAdd />
+            <ButtonAdd handler={props.setPopup} />
         </header>
     )
 }

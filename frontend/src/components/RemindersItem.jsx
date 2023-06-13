@@ -1,7 +1,22 @@
 import React from "react";
 import { ButtonOtions } from "./UI/ButtonOptions/ButtonOptions";
 
-export const ReminderItem = ({reminder}, ...props) => {
+export const ReminderItem = ({reminder, delReminder}, ...props) => {
+    //console.log(`пропсы из позиции: ${JSON.stringify(props)}`)
+    const deleteReminder = async () => {
+        const response = await fetch(
+            `api/reminders/${reminder.id}`,
+            {method: 'DELETE'}
+        );
+
+        const JSONresponse = await response.json();
+
+        if(JSONresponse.result === 'success') {
+            console.log(props)
+            delReminder(reminder.id);
+        }
+    }
+
     return (
         <li
             className="remindersItem"
@@ -10,7 +25,7 @@ export const ReminderItem = ({reminder}, ...props) => {
                 className="reminderItemHeader"
             >
                 <h2>{reminder.title}</h2>
-                <ButtonOtions />
+                <ButtonOtions handleClick={deleteReminder} />
             </div>
             <div
                 className="reminderItemContent"
@@ -27,6 +42,7 @@ export const ReminderItem = ({reminder}, ...props) => {
                         name="done"
                         id="done"
                         checked={reminder.completed}
+                        readOnly
                     />
                     <label htmlFor="done">Done</label>
                 </div>

@@ -5,6 +5,7 @@ export const ButtonAdd = (props) => {
     return (
         <button
             className={cl.buttonAdd}
+            onClick={(event) => props.handler(true)}
         >
             <svg
                 height="35px"
