@@ -1,5 +1,5 @@
 .button_cancel {
-    fill: #dc143c;
+    fill: #b3bcc5;
     height: 35px;
     width: 35px;
     position: absolute;
@@ -11,9 +11,11 @@
 }
 
 .button_cancel:hover {
+    top: -16px;
     height: 40px;
     width: 40px;
     opacity: 1;
     transition: all;
     transition-timing-function: ease;
+    fill: #005bff;
 }

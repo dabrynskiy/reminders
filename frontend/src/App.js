@@ -4,6 +4,7 @@ import { Header } from './components/Header';
 import { Navigation } from './components/Navigation';
 import { Reminders } from './components/Reminders';
 import { Popup } from './components/UI/Popup/Popup';
+import { Form } from './components/Form/Form';
 
 function App() {
   const ref = useRef();
@@ -20,6 +21,23 @@ function App() {
   const [loadingError, setLoadingError] = useState({hasError: false, error: ''});
 
   const [popup, setPopup] = useState(false);
+
+  function addReminder(reminder) {
+    const index = reminders.length + 1;
+    setReminders([...reminders, reminder]);
+    setPopup(false);
+    return index;
+  }
+
+  function changeReminder(index, newData) {
+    console.log(`Index = ${index}`);
+    console.log(`reminders = ${reminders}`)
+    const newReminderList = [...reminders];
+
+    newReminderList[index] = newData;
+
+    setReminders(newReminderList);
+  }
   
   useEffect(() => {
     const observer = new IntersectionObserver(async (entries, observer) => {
@@ -80,6 +98,7 @@ function App() {
         <div className='nav-and-main'>
           <Navigation />
           <Reminders
+            setReminders={setReminders}
             reminders={reminders}
             ref={ref} 
             isLoading={isLoading}
@@ -88,7 +107,15 @@ function App() {
         </div>
       </div>
     </div>
-    <Popup openPopup={popup} setPopup={setPopup} />
+    <Popup
+      openPopup={popup}
+      setPopup={setPopup}
+    >
+      <Form
+        addReminder={addReminder}
+        changeReminder={changeReminder}
+      />
+    </Popup>
     </>
   );
 };

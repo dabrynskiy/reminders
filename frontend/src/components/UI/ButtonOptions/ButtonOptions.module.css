@@ -6,3 +6,40 @@
 .buttonOptions:hover > svg {
     fill: #001a34;
 }
+
+.wrapper {
+    position: relative;
+}
+
+.menu {
+    position: absolute;
+    background-color: whitesmoke;
+    padding: 5px;
+    left: -12px;
+    border-radius: 8px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, .3),
+        -23px 0 20px -23px rgba(0, 0, 0, .6),
+        23px 0 20px -23px rgba(0, 0, 0, .6),
+        inset 0 0 40px rgba(0, 0, 0, .1);
+    display: none;
+}
+
+.menu > ul {
+    padding-inline-start: 0;
+}
+
+.menu > ul > li {
+    padding-left: 8px;
+    padding-right: 8px;
+    border-radius: 4px;
+}
+
+.menu > ul > li:hover {
+    background-color: #005bff;
+    cursor: pointer;
+    color: whitesmoke;
+}
+
+.display {
+    display: block;
+}

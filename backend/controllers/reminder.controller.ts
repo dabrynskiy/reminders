@@ -54,17 +54,26 @@ export default class ReminderController {
             const reminders = await pool.query(
                 'SELECT * FROM reminders WHERE person_id = $1 ORDER BY id ASC LIMIT $2 OFFSET $3', 
                 [USER, limit, offset]);
+            
+            if(reminders.rows.length === 0) {
+                response.json({
+                    result: SUCCESS,
+                    reminders: <IReminder[]>reminders.rows,
+                    hasNext: false
+                });
+            } else {
+            
+                const hasNext = await pool.query(
+                    'SELECT COUNT(id) FROM reminders WHERE id > $1 AND person_id = $2',
+                    [reminders.rows[reminders.rows.length - 1].id, USER]
+                )
 
-            const hasNext = await pool.query(
-                'SELECT COUNT(id) FROM reminders WHERE id > $1 AND person_id = $2',
-                [reminders.rows[reminders.rows.length - 1].id, USER]
-            )
-
-            response.json({
-                result: SUCCESS,
-                reminders: <IReminder[]>reminders.rows,
-                hasNext: Boolean(+hasNext.rows[0].count)
-            });
+                response.json({
+                    result: SUCCESS,
+                    reminders: <IReminder[]>reminders.rows,
+                    hasNext: Boolean(+hasNext.rows[0].count)
+                });
+            }
             
         } catch (error) {
             response.status(500).json({result: FAILURE, error: error});

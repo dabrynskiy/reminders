@@ -1,0 +1,29 @@
+.formControl {
+    display: block;
+    border-radius: 8px;
+    font-weight: 400;
+    font-size: large;
+    letter-spacing: 0.2px;
+    font-style: normal;
+    color: #001a34;
+    border: 2px solid #b3bcc5;
+    width: 30rem;
+    margin-bottom: 1em;
+}
+
+.formControl:hover {
+    border: 2px solid #005bff;
+}
+
+.formControl:invalid {
+    border-color: #dc143c;
+}
+
+.formButton {
+    background-color: #b3bcc5;
+}
+
+.formButton:hover {
+    background-color: #005bff;
+    color: whitesmoke
+}

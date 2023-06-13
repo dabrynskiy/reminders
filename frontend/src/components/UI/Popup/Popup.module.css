@@ -12,10 +12,14 @@
   
 .popup {
     background-color: whitesmoke;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     min-width: 30rem;
     min-height: 10em;
     border-radius: 8px;
     position: relative;
+    padding: 1em;
 }
 
 .flex {

@@ -3,11 +3,6 @@ import cl from './Popup.module.css'
 import { ButtonCancel } from "../ButtonCancel/ButtonCancel";
 
 export const Popup = (props) => {
-    /*const [classes, setClasses] = useState([cl.popup_wrapper]);*/
-
-    /*if(props.openPopup) {
-        setClasses([cl.popup_wrapper, cl.flex])
-    }*/
 
     const classes = [cl.popup_wrapper];
 
@@ -25,6 +20,9 @@ export const Popup = (props) => {
                 onClick={(event) => event.stopPropagation()}
             >
                 <ButtonCancel handler={props.setPopup} />
+                {
+                    props.children
+                }
             </div>
         </div>
     )
